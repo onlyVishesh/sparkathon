@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
       { message: "Fetching weather data...", duration: 1500 },
       { message: "Analyzing patterns...", duration: 1200 },
       { message: "Optimizing route...", duration: 1500 },
-      { message: "Generating recommendations...", duration: 1800 },
+      { message: "Generating recommendations...", duration: 1500 },
     ];
 
     let taskIndex = 0;
@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
           clearInterval(taskInterval);
         }
       }
-    }, 2000); // Increased to 2 seconds per task
+    }, 1500); // Increased to 2 seconds per task
 
     try {
       // Start fetching data after initial delay

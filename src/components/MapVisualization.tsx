@@ -120,7 +120,7 @@ const MapVisualization: React.FC<MapVisualizationProps> = ({
               .finally(() => setIsLoadingRoute(false));
           }, 500);
         }
-      }, 800); // Update every 800ms to make it last about 1 minute
+      }, 100); // Update every 800ms to make it last about 1 minute
 
       return () => clearInterval(loadingInterval);
     }

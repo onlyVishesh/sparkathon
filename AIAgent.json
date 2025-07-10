@@ -1,0 +1,176 @@
+{
+  "nodes": [
+    {
+      "id": "WebhookTrigger",
+      "parameters": {
+        "path": "optimize-ccia",
+        "options": {}
+      },
+      "name": "Receive Shipment Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 200],
+      "webhookId": "fake-webhook-id",
+      "credentials": {}
+    },
+    {
+      "id": "FetchWeather",
+      "parameters": {
+        "interval": 1500
+      },
+      "name": "Fetching Weather Data",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "id": "AnalyzePatterns",
+      "parameters": {
+        "interval": 1200
+      },
+      "name": "Analyzing Patterns",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [700, 200]
+    },
+    {
+      "id": "OptimizeRoute",
+      "parameters": {
+        "interval": 1500
+      },
+      "name": "Optimizing Route",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [950, 200]
+    },
+    {
+      "id": "GenerateResponse",
+      "parameters": {
+        "interval": 1800
+      },
+      "name": "Generating Recommendations",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1200, 200]
+    },
+    {
+      "id": "SetFinalOutput",
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "recommended_departure",
+              "value": "2025-07-05T22:00:00+05:30"
+            },
+            {
+              "name": "cooling_plan",
+              "value": "Pre-chill to -22°C, then maintain -18°C"
+            },
+            {
+              "name": "default_plan_fuel",
+              "value": "20"
+            },
+            {
+              "name": "ccia_plan_fuel",
+              "value": "12"
+            },
+            {
+              "name": "fuel_saved_percent",
+              "value": "40"
+            },
+            {
+              "name": "co2_avoided_kg",
+              "value": "21"
+            },
+            {
+              "name": "spoilage_risk",
+              "value": "Low"
+            }
+          ]
+        }
+      },
+      "name": "Return Mock AI Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1450, 200]
+    },
+    {
+      "id": "SendResponse",
+      "parameters": {},
+      "name": "Respond to Frontend",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1700, 200]
+    }
+  ],
+  "connections": {
+    "Receive Shipment Input": {
+      "main": [
+        [
+          {
+            "node": "Fetching Weather Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetching Weather Data": {
+      "main": [
+        [
+          {
+            "node": "Analyzing Patterns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyzing Patterns": {
+      "main": [
+        [
+          {
+            "node": "Optimizing Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimizing Route": {
+      "main": [
+        [
+          {
+            "node": "Generating Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generating Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Return Mock AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Mock AI Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Frontend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "name": "CCIA AI Agent Simulation",
+  "active": false
+}
