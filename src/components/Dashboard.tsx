@@ -127,11 +127,9 @@ const Dashboard: React.FC = () => {
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  Cold Chain Intelligence Advisor
-                </h1>
+                <h1 className="text-xl font-bold text-gray-900">Arktik.AI</h1>
                 <p className="text-sm text-gray-600">
-                  AI-Powered Logistics Optimization
+                  AI for zero-spoilage logistics.
                 </p>
               </div>
             </div>
