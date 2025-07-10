@@ -6,9 +6,9 @@ export const generateEnhancedAIRecommendation = (
   originWeather: WeatherForecast,
   destinationWeather: WeatherForecast
 ): AIRecommendation => {
-  const randomHours = Math.floor(Math.random() * (70 - 24 + 1)) + 48;
+  
   const baseRecommendation = {
-    estimatedDelivery: new Date(Date.now() + randomHours * 60 * 60 * 1000).toISOString(),
+    estimatedDelivery: new Date(Date.now() + 100 * 60 * 60 * 1000).toISOString(),
     routeOptimization: "Optimized route with temperature monitoring",
   };
 

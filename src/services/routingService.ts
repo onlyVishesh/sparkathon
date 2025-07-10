@@ -36,7 +36,6 @@ const HIGHWAY_JUNCTIONS = {
   'Mumbai-Delhi': [
     [19.0760, 72.8777], // Mumbai
     [19.9975, 73.7898], // Nashik
-    [21.1458, 79.0882], // Nagpur
     [23.2599, 77.4126], // Bhopal
     [26.9124, 75.7873], // Jaipur
     [28.7041, 77.1025]  // Delhi
