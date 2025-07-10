@@ -1,5 +1,6 @@
 import { Brain, Check } from "lucide-react";
 import React, { useState } from "react";
+import { flushSync } from "react-dom";
 import { getWeatherData, WeatherForecast } from "../services/weatherService";
 import { AIRecommendation, ShipmentData } from "../types";
 import { generateEnhancedAIRecommendation } from "../utils/enhancedMockAI";
@@ -32,46 +33,65 @@ const Dashboard: React.FC = () => {
     setShipmentData(data);
     setLoadingProgress(0);
     setCompletedTasks([]);
-    setCurrentTaskIndex(0);
+    setCurrentTaskIndex(-1); // Start with no current task
     setIsRouteProcessed(false);
 
     // AI Agent simulation tasks
     const tasks = [
-      { message: "Initializing AI Agent...", duration: 1000 },
-      { message: "Fetching weather data...", duration: 1500 },
-      { message: "Analyzing patterns...", duration: 1200 },
-      { message: "Optimizing route...", duration: 1500 },
-      { message: "Generating recommendations...", duration: 1500 },
+      { message: "Initializing AI Agent...", duration: 500 },
+      { message: "Fetching weather data...", duration: 800 },
+      { message: "Analyzing patterns...", duration: 500 },
+      { message: "Optimizing route...", duration: 800 },
+      { message: "Generating recommendations...", duration: 800 },
     ];
 
     let taskIndex = 0;
     let progress = 0;
 
-    const taskInterval = setInterval(() => {
+    // Simple task runner logic
+    const runTasks = () => {
       if (taskIndex < tasks.length) {
-        // Mark current task as completed when it starts
-        setCompletedTasks((prev) => [...prev, taskIndex]);
+        console.log(`Starting task ${taskIndex}: ${tasks[taskIndex].message}`);
 
-        // Mark route as processed when "Optimizing route" task is completed
-        if (taskIndex === 3) {
-          // "Optimizing route" is at index 3
-          setIsRouteProcessed(true);
-        }
-
-        progress += 100 / tasks.length;
-        setLoadingProgress(Math.min(progress, 100));
-
-        taskIndex++;
-
-        // Set next task as current if there is one
-        if (taskIndex < tasks.length) {
+        // Force synchronous update to ensure current task is rendered
+        flushSync(() => {
           setCurrentTaskIndex(taskIndex);
-        } else {
-          setCurrentTaskIndex(-1); // All tasks completed
-          clearInterval(taskInterval);
-        }
+        });
+
+        setTimeout(() => {
+          console.log(
+            `Completing task ${taskIndex}: ${tasks[taskIndex].message}`
+          );
+          flushSync(() => {
+            setCompletedTasks((prev) => {
+              const newCompleted = [...prev, taskIndex];
+              console.log("Completed tasks:", newCompleted);
+              return newCompleted;
+            });
+            progress += 100 / tasks.length;
+            setLoadingProgress(Math.min(progress, 100));
+          });
+
+          // Mark route as processed when "Optimizing route" task is completed
+          if (taskIndex === 3) {
+            setIsRouteProcessed(true);
+          }
+
+          taskIndex++;
+          if (taskIndex < tasks.length) {
+            runTasks();
+          } else {
+            // All tasks completed
+            setCurrentTaskIndex(-1);
+          }
+        }, tasks[taskIndex].duration);
       }
-    }, 1500); // Increased to 2 seconds per task
+    };
+
+    // Start tasks with delay to ensure UI is ready
+    setTimeout(() => {
+      runTasks();
+    }, 200);
 
     try {
       // Start fetching data after initial delay
@@ -93,7 +113,7 @@ const Dashboard: React.FC = () => {
           destinationWeatherData
         );
 
-        // Ensure minimum 10 seconds loading time
+        // Ensure minimum 3 seconds loading time
         setTimeout(() => {
           setRecommendation(aiRecommendation);
           setLoadingProgress(100);
@@ -101,16 +121,14 @@ const Dashboard: React.FC = () => {
           // Clear loading after brief completion message
           setTimeout(() => {
             setIsLoading(false);
-            clearInterval(taskInterval);
           }, 800);
-        }, Math.max(0, 10000 - Date.now() + loadingStartTime));
-      }, 2000);
+        }, Math.max(0, 3000 - Date.now() + loadingStartTime));
+      }, 500);
     } catch (error) {
       console.error("Error fetching data:", error);
       setTimeout(() => {
         setIsLoading(false);
-        clearInterval(taskInterval);
-      }, 10000);
+      }, 3000);
     }
 
     const loadingStartTime = Date.now();
